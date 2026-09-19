@@ -3,6 +3,17 @@
   "rateDisclaimer": "Prices are rough guesses from 2024–2026 tips. Always check the board.",
   "spots": [
     {
+      "name": "NU Sentral — WORQ / 1 Sentrum",
+      "tagline": "Organiser’s parking pick",
+      "area": "KL Sentral",
+      "near": "WORQ Menara 1 Sentrum / Grok Bot Meetup",
+      "type": "Basement",
+      "sentiment": "Good",
+      "priceNote": "Rate not confirmed — check the parking board",
+      "tips": "Park near E3 or E5 on B1, or H3 or H5 on B2. Take the 1 Sentrum lift to Level 6, register at reception, then go to WORQ on Level 20. Directions confirmed in the organiser’s 19 Sep 2026 event reminder.",
+      "sourceLinks": "https://worq.my/wp-content/uploads/2023/05/Wayfinding-WORQ-KL-Sentral.pdf"
+    },
+    {
       "name": "Suria KLCC basement",
       "tagline": "Skip for long days",
       "area": "KLCC",
