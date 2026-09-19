@@ -606,3 +606,13 @@ a:hover {
 .footer-inner p {
   margin: 0;
 }
+
+
+/* Kid-friendly sentiment chips */
+.chip-good, .chip-recommended { background: #d1fae5; color: #065f46; }
+.chip-okay, .chip-mixed { background: #fef3c7; color: #92400e; }
+.chip-skip, .chip-avoid { background: #fee2e2; color: #991b1b; }
+.card-tagline { margin: 0.25rem 0 0.75rem; color: var(--muted, #57534e); font-size: 0.95rem; }
+.card-tip { margin: 0.5rem 0 0; font-size: 1rem; }
+.card-price { margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--muted, #57534e); }
+.face { font-size: 1.1rem; }

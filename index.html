@@ -3,20 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CariPark — Find parking in KL from local social insights</title>
-  <meta name="description" content="CariPark helps you find parking in Kuala Lumpur using local Reddit, forum, and tip snapshots — filter by area and sentiment." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <title>CariPark — Easy parking tips for KL</title>
+  <meta name="description" content="Simple parking tips for Kuala Lumpur — Good, Okay, or Skip." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="logo" href="#top" aria-label="CariPark home">
-        <span class="logo-mark" aria-hidden="true">P</span>
-        <span class="logo-text">CariPark</span>
-      </a>
+      <a class="logo" href="#top"><span class="logo-mark">P</span><span class="logo-text">CariPark</span></a>
       <nav class="nav" aria-label="Primary">
         <a href="#spots">Spots</a>
         <a href="#about">About</a>
@@ -28,29 +22,25 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow">Kuala Lumpur · social insights</p>
-          <h1>Find parking in KL without the nightmare.</h1>
+          <p class="eyebrow">Kuala Lumpur parking · made simple</p>
+          <h1>Where should we park?</h1>
           <p class="lede">
-            CariPark turns Reddit threads, local tips, and parking guides into a filterable map of where locals actually park —
-            and where they tell you to avoid.
+            Short tips from locals. Pick a place, see if it’s <strong>Good</strong>, <strong>Okay</strong>, or <strong>Skip</strong>.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#spots">Browse spots</a>
-            <a class="btn btn-ghost" href="#about">How it works</a>
+            <a class="btn btn-primary" href="#spots">Show parking spots</a>
           </div>
-          <p class="hero-note" id="rate-disclaimer">
-            Prices and tips are social snapshots from roughly 2024–2026 — confirm on site before you go.
-          </p>
+          <p class="hero-note" id="rate-disclaimer">Prices are rough guesses — always check the board.</p>
         </div>
         <div class="hero-card" aria-hidden="true">
           <div class="hero-stat">
             <span class="stat-num" id="hero-count">12</span>
-            <span class="stat-label">curated spots</span>
+            <span class="stat-label">spots</span>
           </div>
           <ul class="hero-chips">
-            <li class="chip chip-recommended">Recommended</li>
-            <li class="chip chip-mixed">Mixed</li>
-            <li class="chip chip-avoid">Avoid</li>
+            <li class="chip chip-good">Good 🙂</li>
+            <li class="chip chip-okay">Okay 😐</li>
+            <li class="chip chip-skip">Skip 😕</li>
           </ul>
           <p class="hero-card-foot">KLCC · Bukit Bintang · Mid Valley · Bangsar</p>
         </div>
@@ -61,62 +51,36 @@
       <div class="container">
         <div class="section-head">
           <h2>Parking spots</h2>
-          <p class="section-sub">Filter by neighbourhood and how locals feel about it.</p>
+          <p class="section-sub">Filter by area and Good / Okay / Skip.</p>
         </div>
-
         <div class="filters" role="search" aria-label="Filter parking spots">
           <div class="filter-group">
             <label for="filter-area">Area</label>
-            <select id="filter-area">
-              <option value="all">All areas</option>
-            </select>
+            <select id="filter-area"><option value="all">All areas</option></select>
           </div>
           <div class="filter-group">
-            <label for="filter-sentiment">Sentiment</label>
+            <label for="filter-sentiment">How good?</label>
             <select id="filter-sentiment">
-              <option value="all">All sentiments</option>
-              <option value="Recommended">Recommended</option>
-              <option value="Mixed">Mixed</option>
-              <option value="Avoid">Avoid</option>
+              <option value="all">All</option>
+              <option value="Good">Good 🙂</option>
+              <option value="Okay">Okay 😐</option>
+              <option value="Skip">Skip 😕</option>
             </select>
           </div>
           <p class="spots-count" id="spots-count" aria-live="polite">Showing 0 spots</p>
         </div>
-
-        <div class="spots-grid" id="spots-grid">
-          <!-- Cards rendered by app.js -->
-        </div>
-        <p class="empty-state" id="empty-state" hidden>No spots match these filters. Try another area or sentiment.</p>
+        <div class="spots-grid" id="spots-grid"></div>
+        <p class="empty-state" id="empty-state" hidden>Nothing matches. Try another filter.</p>
       </div>
     </section>
 
     <section class="about-section" id="about">
       <div class="container about-grid">
         <div>
-          <h2>Built for KL drivers</h2>
-          <p>
-            Mall basements, street apps, evening flat rates, and “park in Kg Baru and walk” lore —
-            CariPark gathers what locals already share so you spend less time circling.
-          </p>
+          <h2>How to read a card</h2>
+          <p><strong>Good</strong> = nice pick. <strong>Okay</strong> = fine sometimes. <strong>Skip</strong> = better park somewhere else.</p>
+          <p>Faces show how hard it is: Easy 🙂 · Medium 😐 · Hard 😣</p>
         </div>
-        <ul class="features">
-          <li>
-            <strong>Social verdicts</strong>
-            <span>Summaries from Reddit, forums, and local guides — not official rates.</span>
-          </li>
-          <li>
-            <strong>Filter fast</strong>
-            <span>By area and sentiment: Recommended, Mixed, or Avoid.</span>
-          </li>
-          <li>
-            <strong>Tips &amp; timing</strong>
-            <span>Best times, difficulty, and confidence so you know how solid the tip is.</span>
-          </li>
-          <li>
-            <strong>Source links</strong>
-            <span>Jump back to the thread or guide when you want the full discussion.</span>
-          </li>
-        </ul>
       </div>
     </section>
   </main>
@@ -124,10 +88,9 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p><strong>CariPark</strong> · park.topekuno.my</p>
-      <p class="footer-meta">Data snapshotted from Notion · confirm prices on site</p>
+      <p class="footer-meta">Simple tips · check prices on the board</p>
     </div>
   </footer>
-
   <script src="app.js"></script>
 </body>
 </html>
