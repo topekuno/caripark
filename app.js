@@ -1,0 +1,366 @@
+/* CariPark — load spots + filter UI */
+(function () {
+  "use strict";
+
+  /** Fallback when fetch fails (e.g. file:// preview) */
+  const FALLBACK_DATA = {
+  "updated": "2026-09-19",
+  "rateDisclaimer": "Prices and tips are social snapshots from roughly 2024–2026 — confirm on site before you go.",
+  "spots": [
+    {
+      "name": "Suria KLCC / KLCC basement — avoid for long weekday stays",
+      "area": "KLCC",
+      "near": "Suria KLCC / Petronas Twin Towers",
+      "type": "Basement",
+      "difficulty": "Nightmare",
+      "sentiment": "Avoid",
+      "bestTime": "Evenings only if you must (evening max helps); otherwise avoid 8am–6pm weekdays",
+      "priceNote": "Malay Mail (Jan 2025): weekdays ~RM5 first hour + RM4/hr; evening max ~RM17 (5pm–5am). Reddit locals cite ~RM42 for a full 8am–6pm workday. Lost ticket ~RM100.",
+      "socialVerdict": "r/KualaLumpur drivers treat Suria parking as the expensive default you only use if you have no choice. Daytime stays add up fast; exit queues and congestion are recurring complaints. Many prefer LRT to KLCC or parking farther away.",
+      "tips": "If visiting daytime, park cheaper nearby (Avenue K / Kg Baru) or take LRT. Keep TnG/card ready; don't lose the ticket.",
+      "sources": [
+        "Reddit",
+        "Local tip"
+      ],
+      "sourceLinks": "https://www.reddit.com/r/KualaLumpur/comments/1f3rzhh/where_do_you_park_your_car_including_510_minute/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    },
+    {
+      "name": "Kampung Baru + Saloma Bridge walk to KLCC",
+      "area": "KLCC",
+      "near": "Saloma Link Bridge / Kampung Baru",
+      "type": "Street",
+      "difficulty": "Medium",
+      "sentiment": "Recommended",
+      "bestTime": "Whenever Suria is packed or for full-day visits",
+      "priceNote": "Street/local rates vary; Reddit frames this as the cheap workaround vs Suria day rates (exact bay price not consistently quoted).",
+      "socialVerdict": "A recurring r/KualaLumpur tip: park in Kampung Baru and walk ~5 minutes via Saloma Bridge to avoid the KLCC parking nightmare. Locals say the walk is worth the savings.",
+      "tips": "Use Waze to a Kg Baru side street near Saloma Link; watch for DBKL/app payment zones and time limits before leaving the car.",
+      "sources": [
+        "Reddit"
+      ],
+      "sourceLinks": "https://www.reddit.com/r/KualaLumpur/comments/1f3rzhh/where_do_you_park_your_car_including_510_minute/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    },
+    {
+      "name": "Outdoor lot behind Avenue K (day rate hack)",
+      "area": "KLCC",
+      "near": "Avenue K / Jalan Ampang",
+      "type": "Open lot",
+      "difficulty": "Hard",
+      "sentiment": "Mixed",
+      "bestTime": "Arrive early on weekdays; fills up fast",
+      "priceNote": "Reddit (2024): ~RM15/day outdoor behind Ave K (anecdotal; confirm on site). Mall basement is separate hourly pricing.",
+      "socialVerdict": "Locals call the outdoor lot behind Avenue K a cheaper KLCC option if you arrive early. Downsides: outdoor/at-own-risk, big trees (post-storm anxiety), and double-park culture where you may leave keys with attendants.",
+      "tips": "Go early. If full, expect double-parking / key-holding culture — many locals are uncomfortable with that. Walk across to KLCC.",
+      "sources": [
+        "Reddit"
+      ],
+      "sourceLinks": "https://www.reddit.com/r/KualaLumpur/comments/1f3rzhh/where_do_you_park_your_car_including_510_minute/",
+      "lastChecked": "2026-09-19",
+      "confidence": "Medium"
+    },
+    {
+      "name": "Avenue K mall parking (evening flat rate)",
+      "area": "KLCC",
+      "near": "Avenue K opposite Suria KLCC",
+      "type": "Mall",
+      "difficulty": "Easy",
+      "sentiment": "Recommended",
+      "bestTime": "After 7pm (flat rate); also viable for short daytime visits",
+      "priceNote": "Weekdays: ~RM5 first hour + RM3/hr; flat ~RM7 entry 7pm–7am. Weekends: ~RM4 first 2 hours + RM3/hr (KL Insider / Motorist 2025–2026 guides). No daily max.",
+      "socialVerdict": "Local parking guides push Avenue K as the practical cheaper neighbour to Suria KLCC, especially evenings. Short walk / LRT-linked access to the KLCC corridor.",
+      "tips": "Cashless only (card/TnG/e-wallets). Use basement signs toward KLCC LRT for the covered walk route.",
+      "sources": [
+        "Local tip"
+      ],
+      "sourceLinks": "https://kualalumpurinsider.com/parking/avenue-k-parking-rate/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    },
+    {
+      "name": "Pavilion KL — convenient but pricey",
+      "area": "Bukit Bintang",
+      "near": "Pavilion KL / Jalan Bukit Bintang",
+      "type": "Mall",
+      "difficulty": "Hard",
+      "sentiment": "Avoid",
+      "bestTime": "Weekday evenings if using flat rate; otherwise park next door",
+      "priceNote": "Guides cite ~RM4/hour, daily max ~RM40; weekday evening flat ~RM10 (5pm–7am). Lost ticket often cited ~RM100.",
+      "socialVerdict": "Reddit threads repeatedly call Pavilion parking prohibitively expensive for regulars. Locals almost always recommend Lot 10, Starhill, Sungei Wang, HLA, or LaLaport instead.",
+      "tips": "Only park here for short visits or if connecting directly to a venue. For nights out / long stays, use neighbouring malls.",
+      "sources": [
+        "Reddit",
+        "Local tip"
+      ],
+      "sourceLinks": "https://www.reddit.com/r/KualaLumpur/comments/1el7lsj/parking_at_bukit_bintang/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    },
+    {
+      "name": "Lot 10 / Starhill Gallery — Pavilion alternatives",
+      "area": "Bukit Bintang",
+      "near": "Lot 10 / The Starhill (opposite Pavilion)",
+      "type": "Mall",
+      "difficulty": "Easy",
+      "sentiment": "Recommended",
+      "bestTime": "Weekends for flat packages; evenings after ~5–6pm",
+      "priceNote": "Commonly listed: weekdays ~RM5 first 3 hours + RM3/hr; evening flat ~RM7. Weekends: ~RM10 first 8 hours, max ~RM15 (Lot 10 / Starhill guides).",
+      "socialVerdict": "Motorist and KL Insider guides, plus Reddit night-out threads, consistently recommend Lot 10 and Starhill over Pavilion for value. Reddit users note Lot 10 stays open late (Don Donki / late events).",
+      "tips": "For weekend evenings past 10pm, Lot 10 is often cited as still open. Short walk to Pavilion / Jalan Alor.",
+      "sources": [
+        "Reddit",
+        "Local tip"
+      ],
+      "sourceLinks": "https://www.reddit.com/r/KualaLumpur/comments/1mc1asm/affordable_parking_spots_at_bukit_bintang_on/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    },
+    {
+      "name": "Sungei Wang / Plaza Low Yat — evening flat rates",
+      "area": "Bukit Bintang",
+      "near": "Sungei Wang Plaza / Plaza Low Yat",
+      "type": "Mall",
+      "difficulty": "Easy",
+      "sentiment": "Recommended",
+      "bestTime": "After 6pm (flat rates); good for night outs near BB / Jalan Alor",
+      "priceNote": "Sungei Wang: evening flat ~RM5 (6pm–7am). Low Yat: evening flat ~RM6 after 6pm (leave by 6am). Day rates also relatively low vs Pavilion.",
+      "socialVerdict": "KL Insider’s weekday/weekend cheat-sheet and Reddit weekend threads point drivers here when Pavilion is too expensive and street spots are gone. Often available when BB is busy.",
+      "tips": "Useful for Jalan Alor / BB nightlife. Confirm exit cutoff for the evening flat before you stay past dawn.",
+      "sources": [
+        "Reddit",
+        "Local tip"
+      ],
+      "sourceLinks": "https://kualalumpurinsider.com/bukit-bintang-cheaper-parking-and-rates-near-pavilion/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    },
+    {
+      "name": "HLA building car park near Pavilion",
+      "area": "Bukit Bintang",
+      "near": "HLA / near Pavilion KL",
+      "type": "Basement",
+      "difficulty": "Easy",
+      "sentiment": "Recommended",
+      "bestTime": "After 5–6pm weekdays; all day weekends",
+      "priceNote": "Reddit (Aug 2024): ~RM6 per entry after 5/6pm and weekends (confirm on site; rates can change).",
+      "socialVerdict": "In the Pavilion season-parking thread, locals specifically shout out HLA as the cheap evening/weekend option a short walk from Pavilion.",
+      "tips": "Good for dinner / night errands near Pavilion without paying Pavilion rates. Arrive with exact building entrance in Waze.",
+      "sources": [
+        "Reddit"
+      ],
+      "sourceLinks": "https://www.reddit.com/r/KualaLumpur/comments/1el7lsj/parking_at_bukit_bintang/",
+      "lastChecked": "2026-09-19",
+      "confidence": "Medium"
+    },
+    {
+      "name": "Mid Valley Megamall / The Gardens — cheap for shoppers, painful for office days",
+      "area": "Mid Valley",
+      "near": "Mid Valley Megamall / The Gardens Mall",
+      "type": "Mall",
+      "difficulty": "Medium",
+      "sentiment": "Mixed",
+      "bestTime": "Weekend shopping trips; avoid full weekday 9–7 office parking if paying casual rates",
+      "priceNote": "From Jan 2026 (Wah Piang): general zones first 3 hours RM3 weekdays / RM4 weekends+PH; then RM1 for hour 3–4; subsequent ~RM2.50 weekday / RM1 weekend. No daily max. Reddit office workers reported ~RM19 for 9am–7pm under older rates.",
+      "socialVerdict": "Reddit shoppers often say Mid Valley parking is acceptable for leisure. Office workers in r/malaysians call full-day casual parking wallet-bleeding and discuss season passes, re-parking every few hours, or external lots.",
+      "tips": "For work: ask about season pass (waitlists common) or use nearby open lots / transit. Autopay lobbies exist; lost card ~RM50.",
+      "sources": [
+        "Reddit",
+        "Local tip"
+      ],
+      "sourceLinks": "https://wahpiang.com/mid-valley-kl-revise-new-parking-rates-jan-2026/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    },
+    {
+      "name": "MBMR / KTM open-air lots near Mid Valley",
+      "area": "Mid Valley",
+      "near": "MBMR / Mid Valley KTM / Abdullah Hukum area",
+      "type": "Open lot",
+      "difficulty": "Hard",
+      "sentiment": "Recommended",
+      "bestTime": "Before ~8am on weekdays (fills early)",
+      "priceNote": "Reddit consensus ~RM7–RM10 flat/day (quotes vary RM7, RM10; confirm on site). Pedestrian bridge across KTM to Mid Valley / Gardens.",
+      "socialVerdict": "r/malaysians office threads repeatedly recommend MBMR open-air or under-KTM lots as the practical cheap daily option vs Mid Valley casual rates. Early arrival is mandatory.",
+      "tips": "Arrive early (7–8am). Walk via pedestrian bridge. Eco City / surau-area lots also mentioned (~RM15/day in one comment) as another backup.",
+      "sources": [
+        "Reddit"
+      ],
+      "sourceLinks": "https://www.reddit.com/r/malaysians/comments/1cx3scu/cheap_car_parking_option_near_midvalley/",
+      "lastChecked": "2026-09-19",
+      "confidence": "Medium"
+    },
+    {
+      "name": "Telawi street vs Bangsar Village basement",
+      "area": "Bangsar",
+      "near": "Jalan Telawi / Bangsar Village I–II",
+      "type": "Street",
+      "difficulty": "Nightmare",
+      "sentiment": "Avoid",
+      "bestTime": "Street: almost never for evenings/weekends; use Bangsar Village anytime",
+      "priceNote": "Bangsar Village 2 (2026 guide): weekdays RM2 first hour + RM2/hr; weekends RM3 + RM2.50/hr. Street rates/app payment vary; scarcity is the real cost.",
+      "socialVerdict": "The Edge / local property coverage quotes agents: street parking on Telawi is a nightmare; most people park at Bangsar Village I/II and walk. A Threads local tip also suggests entering via BV3 (near mosque) for a cheaper connected basement route to BV2.",
+      "tips": "Skip hunting Telawi kerbside at night. Park Bangsar Village, walk to restaurants. BV3 entrance hack is popular local lore — verify current rate differential yourself.",
+      "sources": [
+        "Local tip",
+        "Facebook"
+      ],
+      "sourceLinks": "https://kualalumpurinsider.com/bangsar-village-2-latest-parking-rates-and-guide/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    },
+    {
+      "name": "DBKL street apps — EZ KL Smart Park / Flexi / TnG (not JomParking)",
+      "area": "Other",
+      "near": "DBKL on-street bays citywide",
+      "type": "App / Smart",
+      "difficulty": "Medium",
+      "sentiment": "Mixed",
+      "bestTime": "Anytime you use metered street parking in KL",
+      "priceNote": "Street rates vary by zone; apps charge for the duration you book. Overstaying can still get a saman. JomParking discontinued for DBKL from 1 Jan 2025.",
+      "socialVerdict": "Lowyat users complain about too many council apps and joke about not paying; Paul Tan coverage confirms DBKL dropped JomParking in 2025 and kept EZ KL Smart Park, Flexi Parking, TnG eWallet, Boost, Mcash, Ekupon. ParkEasy is a separate mall-reservation product and is not the main KL street solution.",
+      "tips": "Install EZ KL Smart Park and/or Flexi + keep TnG topped up. Always check bay signage. Don't rely on JomParking inside DBKL zones. Expect inconsistent enforcement culture — but towing/saman are not cheap when they hit.",
+      "sources": [
+        "Forum",
+        "Local tip"
+      ],
+      "sourceLinks": "https://paultan.org/2025/01/03/dbkl-no-longer-accepting-jomparking-for-payment-in-2025-six-other-apps-retained-for-public-parking/",
+      "lastChecked": "2026-09-19",
+      "confidence": "High"
+    }
+  ]
+};
+
+  const grid = document.getElementById("spots-grid");
+  const emptyState = document.getElementById("empty-state");
+  const countEl = document.getElementById("spots-count");
+  const areaSelect = document.getElementById("filter-area");
+  const sentimentSelect = document.getElementById("filter-sentiment");
+  const disclaimerEl = document.getElementById("rate-disclaimer");
+  const heroCount = document.getElementById("hero-count");
+
+  let allSpots = [];
+  let rateDisclaimer = FALLBACK_DATA.rateDisclaimer || "";
+
+  function escapeHtml(str) {
+    return String(str ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function sentimentClass(sentiment) {
+    const s = (sentiment || "").toLowerCase();
+    if (s === "recommended") return "badge-recommended";
+    if (s === "mixed") return "badge-mixed";
+    if (s === "avoid") return "badge-avoid";
+    return "badge-mixed";
+  }
+
+  function uniqueAreas(spots) {
+    return [...new Set(spots.map((s) => s.area).filter(Boolean))].sort();
+  }
+
+  function populateAreaFilter(spots) {
+    const areas = uniqueAreas(spots);
+    // Keep "All areas" as first option
+    areaSelect.innerHTML = '<option value="all">All areas</option>';
+    areas.forEach((area) => {
+      const opt = document.createElement("option");
+      opt.value = area;
+      opt.textContent = area;
+      areaSelect.appendChild(opt);
+    });
+  }
+
+  function cardHtml(spot) {
+    const badge = sentimentClass(spot.sentiment);
+    const sources =
+      spot.sourceLinks && String(spot.sourceLinks).trim()
+        ? `<a class="source-link" href="${escapeHtml(spot.sourceLinks)}" target="_blank" rel="noopener noreferrer">View source →</a>`
+        : "";
+    return `
+      <article class="spot-card" data-area="${escapeHtml(spot.area)}" data-sentiment="${escapeHtml(spot.sentiment)}">
+        <div class="spot-card-top">
+          <h3 class="spot-name">${escapeHtml(spot.name)}</h3>
+          <span class="sentiment-badge ${badge}">${escapeHtml(spot.sentiment)}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-pill area">${escapeHtml(spot.area)}</span>
+          <span class="meta-pill">${escapeHtml(spot.difficulty)}</span>
+          <span class="meta-pill">${escapeHtml(spot.type)}</span>
+        </div>
+        <p class="near"><strong>Near:</strong> ${escapeHtml(spot.near)}</p>
+        <p class="verdict">
+          <span class="field-label">Social verdict</span>
+          ${escapeHtml(spot.socialVerdict)}
+        </p>
+        <p class="tips">
+          <span class="field-label">Tips</span>
+          ${escapeHtml(spot.tips)}
+        </p>
+        <p class="price-note">
+          <span class="field-label">Price note</span>
+          ${escapeHtml(spot.priceNote)}
+          <span class="price-snapshot">2024–2026 social snapshot — confirm on site</span>
+        </p>
+        <p class="best-time">
+          <span class="field-label">Best time</span>
+          ${escapeHtml(spot.bestTime)}
+        </p>
+        <div class="card-foot">
+          <span class="confidence">Confidence: <strong>${escapeHtml(spot.confidence)}</strong></span>
+          ${sources}
+        </div>
+      </article>
+    `;
+  }
+
+  function applyFilters() {
+    const area = areaSelect.value;
+    const sentiment = sentimentSelect.value;
+    const filtered = allSpots.filter((s) => {
+      const areaOk = area === "all" || s.area === area;
+      const sentOk = sentiment === "all" || s.sentiment === sentiment;
+      return areaOk && sentOk;
+    });
+
+    grid.innerHTML = filtered.map(cardHtml).join("");
+    const n = filtered.length;
+    countEl.textContent = n === 1 ? "Showing 1 spot" : `Showing ${n} spots`;
+    emptyState.hidden = n > 0;
+  }
+
+  function initUI(data) {
+    allSpots = Array.isArray(data.spots) ? data.spots : [];
+    rateDisclaimer = data.rateDisclaimer || rateDisclaimer;
+    if (disclaimerEl && rateDisclaimer) {
+      disclaimerEl.textContent = rateDisclaimer;
+    }
+    if (heroCount) {
+      heroCount.textContent = String(allSpots.length);
+    }
+    populateAreaFilter(allSpots);
+    applyFilters();
+    areaSelect.addEventListener("change", applyFilters);
+    sentimentSelect.addEventListener("change", applyFilters);
+  }
+
+  async function loadSpots() {
+    try {
+      const res = await fetch("data/spots.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      if (!data || !Array.isArray(data.spots)) throw new Error("Invalid spots payload");
+      initUI(data);
+    } catch (err) {
+      console.warn("CariPark: fetch failed, using embedded fallback.", err);
+      initUI(FALLBACK_DATA);
+    }
+  }
+
+  loadSpots();
+})();
