@@ -41,19 +41,24 @@
     const price = s.priceNote || "";
     const tag = s.tagline || "";
     const link = s.sourceLinks
-      ? `<p class="card-link"><a href="${escapeHtml(s.sourceLinks)}" target="_blank" rel="noopener">More info</a></p>`
+      ? `<a class="card-more" href="${escapeHtml(s.sourceLinks)}" target="_blank" rel="noopener">More info →</a>`
       : "";
-    return `<article class="spot-card" data-area="${escapeHtml(s.area)}" data-sentiment="${escapeHtml(sent)}">
-      <div class="card-top">
+    return `<article class="spot-card sentiment-${escapeHtml(sent).toLowerCase()}" data-area="${escapeHtml(s.area)}" data-sentiment="${escapeHtml(sent)}">
+      <header class="card-header">
         <span class="chip ${sentChip}">${escapeHtml(sent)} ${SENT_FACE[sent] || ""}</span>
-        <span class="face" title="${escapeHtml(diff)}">${FACE[diff] || "😐"} ${escapeHtml(diff)}</span>
+        <span class="diff-pill" title="How hard">${FACE[diff] || "😐"} ${escapeHtml(diff)}</span>
+      </header>
+      <div class="card-body">
+        <h3 class="card-title">${escapeHtml(s.name)}</h3>
+        ${tag ? `<p class="card-tagline">${escapeHtml(tag)}</p>` : ""}
+        <p class="card-where"><span class="where-label">Where</span> ${escapeHtml(s.area)}${s.near ? " · " + escapeHtml(s.near) : ""}</p>
+        <div class="card-tip-box">
+          <span class="tip-label">Tip</span>
+          <p class="card-tip">${escapeHtml(tip)}</p>
+        </div>
       </div>
-      <h3>${escapeHtml(s.name)}</h3>
-      ${tag ? `<p class="card-tagline">${escapeHtml(tag)}</p>` : ""}
-      <p class="card-meta">${escapeHtml(s.area)}${s.near ? " · " + escapeHtml(s.near) : ""}</p>
-      <p class="card-tip"><strong>Tip:</strong> ${escapeHtml(tip)}</p>
-      ${price ? `<p class="card-price">${escapeHtml(price)}</p>` : ""}
-      ${link}
+      ${price ? `<div class="card-price-box"><span class="price-label">Price</span><p class="card-price">${escapeHtml(price)}</p></div>` : ""}
+      ${link ? `<footer class="card-footer">${link}</footer>` : ""}
     </article>`;
   }
 
