@@ -13,6 +13,7 @@
   const countEl = document.getElementById("spots-count");
   const areaSelect = document.getElementById("filter-area");
   const sentimentSelect = document.getElementById("filter-sentiment");
+  const searchInput = document.getElementById("filter-q");
   const heroCount = document.getElementById("hero-count");
   const disclaimer = document.getElementById("rate-disclaimer");
 
@@ -56,12 +57,20 @@
     </article>`;
   }
 
+  function matchesQuery(s, q) {
+    if (!q) return true;
+    const hay = [s.name, s.area, s.near, s.tagline, s.tips].filter(Boolean).join(" ").toLowerCase();
+    return q.split(/\s+/).filter(Boolean).every((word) => hay.includes(word));
+  }
+
   function render() {
     const area = areaSelect.value;
     const sentiment = sentimentSelect.value;
+    const q = (searchInput && searchInput.value || "").trim().toLowerCase();
     const filtered = spots.filter((s) => {
       if (area !== "all" && s.area !== area) return false;
       if (sentiment !== "all" && s.sentiment !== sentiment) return false;
+      if (!matchesQuery(s, q)) return false;
       return true;
     });
     grid.innerHTML = filtered.map(cardHtml).join("");
@@ -79,6 +88,10 @@
 
   areaSelect.addEventListener("change", render);
   sentimentSelect.addEventListener("change", render);
+  if (searchInput) {
+    searchInput.addEventListener("input", render);
+    searchInput.addEventListener("search", render);
+  }
 
   fetch("data/spots.json")
     .then((r) => {

@@ -51,9 +51,13 @@
       <div class="container">
         <div class="section-head">
           <h2>Parking spots</h2>
-          <p class="section-sub">Filter by area and Good / Okay / Skip.</p>
+          <p class="section-sub">Search or filter by area and Good / Okay / Skip.</p>
         </div>
         <div class="filters" role="search" aria-label="Filter parking spots">
+          <div class="filter-group filter-search">
+            <label for="filter-q">Search</label>
+            <input id="filter-q" type="search" placeholder="e.g. Pavilion, Telawi, KLCC" autocomplete="off" />
+          </div>
           <div class="filter-group">
             <label for="filter-area">Area</label>
             <select id="filter-area"><option value="all">All areas</option></select>
@@ -70,7 +74,7 @@
           <p class="spots-count" id="spots-count" aria-live="polite">Showing 0 spots</p>
         </div>
         <div class="spots-grid" id="spots-grid"></div>
-        <p class="empty-state" id="empty-state" hidden>Nothing matches. Try another filter.</p>
+        <p class="empty-state" id="empty-state" hidden>Nothing matches. Try another search or filter.</p>
       </div>
     </section>
 

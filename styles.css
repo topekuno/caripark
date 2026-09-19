@@ -616,3 +616,17 @@ a:hover {
 .card-tip { margin: 0.5rem 0 0; font-size: 1rem; }
 .card-price { margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--muted, #57534e); }
 .face { font-size: 1.1rem; }
+
+.filter-search { flex: 1 1 220px; min-width: 180px; }
+.filter-search input[type="search"] {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line, #e7e0d6);
+  background: white;
+  font: inherit;
+}
+.filter-search input[type="search"]:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent, #0f766e) 45%, white);
+  outline-offset: 1px;
+}
