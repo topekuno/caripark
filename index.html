@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="CariPark — find the best parking in Kuala Lumpur and Malaysia from local insights." />
+  <title>CariPark — Best parking in KL</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="/">CariPark</a>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#waitlist" class="nav-cta">Join waitlist</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Kuala Lumpur · Malaysia</p>
+          <h1>Find parking locals actually trust</h1>
+          <p class="lede">
+            CariPark surfaces the best spots from real local social chatter —
+            so you spend less time circling and more time arriving.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#waitlist">Get early access</a>
+            <a class="btn ghost" href="#features">See how it works</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-hidden="true">
+          <div class="pin">P</div>
+          <p class="card-title">Near Bukit Bintang</p>
+          <ul class="tips">
+            <li>Quiet basement after 8pm</li>
+            <li>Street-smart tip from locals</li>
+            <li>Walkable to the mall</li>
+          </ul>
+          <p class="card-note">Sample insight · not live data yet</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="wrap narrow">
+        <h2>Parking search, grounded in the city</h2>
+        <p>
+          KL traffic is enough. CariPark listens to local conversations and
+          turns them into clear, practical parking leads — neighbourhood by
+          neighbourhood, for Malaysia’s busiest streets.
+        </p>
+      </div>
+    </section>
+
+    <section id="features" class="section tint">
+      <div class="wrap">
+        <h2>Built for how KL parks</h2>
+        <div class="features">
+          <article>
+            <h3>Local insights</h3>
+            <p>Tips pulled from real social chatter, not just generic maps.</p>
+          </article>
+          <article>
+            <h3>KL-first</h3>
+            <p>Tuned for Malaysian streets, malls, and neighbourhood quirks.</p>
+          </article>
+          <article>
+            <h3>Quick to check</h3>
+            <p>Glance, decide, go — less doom-scrolling, more parked.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="waitlist" class="section">
+      <div class="wrap narrow center">
+        <h2>Coming soon</h2>
+        <p>We’re shaping CariPark with early drivers. Drop your email and we’ll ping you when it’s ready.</p>
+        <form class="waitlist" action="#" method="get" onsubmit="return false;">
+          <label class="sr-only" for="email">Email</label>
+          <input id="email" type="email" name="email" placeholder="you@email.com" required />
+          <button class="btn primary" type="submit">Notify me</button>
+        </form>
+        <p class="fineprint">No spam. Placeholder form for now — backend coming later.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="year"></span> CariPark · Taufeeq Halim</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
